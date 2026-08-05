@@ -1,10 +1,12 @@
 #!/bin/sh
 
-# اجرای X-UI در پس‌زمینه
+# اجرای پنل 3x-ui
 /usr/local/x-ui/x-ui &
 
-# صبر برای بالا اومدن
 sleep 5
 
-# اجرای cloudflared
+# تونل برای پنل (پورت 2053)
+/usr/local/bin/cloudflared tunnel --url http://localhost:2053 --no-autoupdate --protocol http2 &
+
+# تونل برای اینباندها (پورت 8080)
 /usr/local/bin/cloudflared tunnel --url http://localhost:8080 --no-autoupdate --protocol http2
