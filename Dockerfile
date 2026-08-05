@@ -2,9 +2,9 @@ FROM alpine:latest
 
 RUN apk add --no-cache bash curl ca-certificates tzdata sqlite
 
-# نصب 3x-ui از ریپوزیتوری که حتماً کار میکنه
+# دانلود نسخه‌ی قدیمی‌تر و پایدار 3x-ui که حتماً کار میکنه
 RUN mkdir -p /usr/local/x-ui /etc/x-ui && \
-    curl -Lo /tmp/x-ui.tar.gz https://github.com/alireza0/x-ui/releases/latest/download/x-ui-linux-amd64.tar.gz && \
+    curl -Lo /tmp/x-ui.tar.gz https://github.com/MHSanaei/3x-ui/releases/download/v2.1.5/x-ui-linux-amd64.tar.gz && \
     tar -C /usr/local/ -xzf /tmp/x-ui.tar.gz && \
     rm -f /tmp/x-ui.tar.gz
 
