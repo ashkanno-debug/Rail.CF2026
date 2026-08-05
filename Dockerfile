@@ -1,30 +1,24 @@
-# استفاده از یه لینوکس خیلی کوچیک به عنوان پایه
 FROM alpine:latest
 
-# نصب ابزارهای لازم برای دانلود و کار با فایل‌ها
 RUN apk add --no-cache bash curl ca-certificates tzdata sqlite
 
-# نصب پنل 3x-ui
+# نصب 3x-ui از ریپوزیتوری که حتماً کار میکنه
 RUN mkdir -p /usr/local/x-ui /etc/x-ui && \
-    curl -Lo /tmp/x-ui-linux-amd64.tar.gz https://github.com/MHSanaei/3x-ui/releases/latest/download/x-ui-linux-amd64.tar.gz && \
-    tar -C /usr/local/ -xzf /tmp/x-ui-linux-amd64.tar.gz && \
-    rm -f /tmp/x-ui-linux-amd64.tar.gz
+    curl -Lo /tmp/x-ui.tar.gz https://github.com/alireza0/x-ui/releases/latest/download/x-ui-linux-amd64.tar.gz && \
+    tar -C /usr/local/ -xzf /tmp/x-ui.tar.gz && \
+    rm -f /tmp/x-ui.tar.gz
 
-# نصب cloudflared
 RUN curl -Lo /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 && \
     chmod +x /usr/local/bin/cloudflared
 
-# تنظیم پورت پیش‌فرض پنل روی 2053 و یوزر/پسورد admin
+WORKDIR /usr/local/x-ui
+
 RUN sqlite3 /etc/x-ui/x-ui.db "CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY AUTOINCREMENT, key TEXT, value TEXT);" && \
     sqlite3 /etc/x-ui/x-ui.db "INSERT OR REPLACE INTO settings (id, key, value) VALUES (1, 'webPort', '2053'), (2, 'webUsername', 'admin'), (3, 'webPassword', 'admin');"
 
-# کپی کردن فایل‌های start.sh و config.json
 COPY start.sh /start.sh
-COPY config.json /etc/x-ui/config.json
 RUN chmod +x /start.sh
 
-# اعلام کردن پورت‌هایی که کانتینر بهشون گوش میده
 EXPOSE 2053 8080
 
-# اجرای start.sh وقتی کانتینر روشن میشه
 CMD ["/start.sh"]
