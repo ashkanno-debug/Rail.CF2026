@@ -19,6 +19,6 @@ RUN sqlite3 /etc/x-ui/x-ui.db "CREATE TABLE IF NOT EXISTS settings (id INTEGER P
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-EXPOSE 2053 8080
+EXPOSE 2053 8080 2097 2098
 
 CMD ["/start.sh"]
